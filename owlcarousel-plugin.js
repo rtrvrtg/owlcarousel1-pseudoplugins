@@ -5,7 +5,7 @@
 
 var OwlPlugins = {
 	// Plugin structure
-	plugin: function(callbacks){
+	plugin: function(callbacks, reusables){
 		// Quick reference to lib for calling what is known to be a function
 		this.addCallbackValue = function(settings, callbackName, cbValue) {
 			OwlPlugins.lib.applyCallback(
@@ -15,39 +15,54 @@ var OwlPlugins = {
 			);
 		};
 
+		// Allows introspection into type of callback value to determine
+		// if we are allowed to add it
+		// Returns TRUE on successful type check, FALSE on failure
+		this.addPotentialCallbackValue = function(settings, callbackName, cbValue){
+			if (typeof(cbValue) == "function") {
+				this.addCallbackValue(settings, callbackName, cbValue);
+				return true;
+			}
+			else if (typeof(cbValue) == 'string' && reusables[cbValue]) {
+				this.addCallbackValue(settings, callbackName, reusables[cbValue]);	
+				return true;
+			}
+			else {
+				return false;
+			}
+		};
+
 		// Throw an error if the callback is not of a desired type
 		this.throwCallbackError = function(callbackName){
-			throw callbackName + " must be either a function or an array of functions";
+			throw callbackName + " must be either a function, a name of a reusable function, or an array of either of these.";
 		};
 
 		// Add a callback value that is either a function
 		// or an array of functions
-		this.addCallbackValue = function(settings, callbackName, cbValue) {
-			if (typeof(cbValue) == "function") {
-				this.addCallbackValue(settings, callbackName, cbValue);
-			}
-			else if (Object.prototype.toString.call(cbValue) === '[object Array]') {
-				for (var i = 0; i < cbValue.length; i++) {
-					if (typeof(cbValue) == "function") {
-						this.addCallbackValue(settings, callbackName, cbValue);
-					}
-					else {
-						this.throwCallbackError(callbackName);
+		this.addCallback = function(settings, callbackName, cbValue) {
+			var added = this.addPotentialCallbackValue(settings, callbackName, cbValue);
+
+			if (!added) {
+				if (Object.prototype.toString.call(cbValue) === '[object Array]') {
+					for (var i = 0; i < cbValue.length; i++) {
+						var addedItem = this.addPotentialCallbackValue(settings, callbackName, cbValue[i]);
+						if (!addedItem) {
+							this.throwCallbackError(callbackName + "[" + i + "]");
+						}
 					}
 				}
-			}
-			else {
-				this.throwCallbackError(callbackName);
+				else {
+					this.throwCallbackError(callbackName);
+				}
 			}
 		};
 
 		// Apply a plugin to a set of Owl Carousel settings
-		this.apply = function(settings){
+		this.applyTo = function(settings){
 			for (var callbackName in callbacks) {
 				var cbValue = callbacks[callbackName];
-				settings = this.addCallbackValue(settings, callbackName, cbValue);
+				this.addCallback(settings, callbackName, cbValue);
 			}
-			return settings;
 		};
 	},
 	// Library functions
@@ -76,7 +91,7 @@ var OwlPlugins = {
 				baseSettings[callbackName] = callbackFunc;
 			}
 		}
-	}
+	},
 	// Common utilities
 	utils: {
 		// Generate a GUID-like random number
