@@ -1,6 +1,6 @@
 /**
  * Owl Carousel v1 Pseudo-Plugins
- * v0.1
+ * v0.1.1
  */
 
 var OwlPlugins = {
@@ -15,6 +15,25 @@ var OwlPlugins = {
 			);
 		};
 
+		// Identify a fully scoped reusable function
+		this.getReusableFunc = function(callbackName){
+			var callbackBits = callbackName.split(".");
+			var cb = null, scope = reusables;
+			for (var i = 0; i < callbackBits.length; i++) {
+				if (scope.hasOwnProperty(callbackBits[i])) {
+					scope = scope[callbackBits[i]];
+					if (i == callbackBits.length - 1 && typeof(scope) == 'function') {
+						cb = scope;
+					}
+				}
+				else {
+					// Throw error?
+					break;
+				}
+			}
+			return cb;
+		};
+
 		// Allows introspection into type of callback value to determine
 		// if we are allowed to add it
 		// Returns TRUE on successful type check, FALSE on failure
@@ -23,9 +42,15 @@ var OwlPlugins = {
 				this.addCallbackValue(settings, callbackName, cbValue);
 				return true;
 			}
-			else if (typeof(cbValue) == 'string' && reusables[cbValue]) {
-				this.addCallbackValue(settings, callbackName, reusables[cbValue]);	
-				return true;
+			else if (typeof(cbValue) == 'string') {
+				var reusable = this.getReusableFunc(cbValue);
+				if (reusable != null) {
+					this.addCallbackValue(settings, callbackName, this.getReusableFunc(cbValue));
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 			else {
 				return false;

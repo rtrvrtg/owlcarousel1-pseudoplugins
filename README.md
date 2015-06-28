@@ -53,7 +53,7 @@ var plugin = new OwlPlugins.plugin(callbackMap, reusableFunctions);
 
 `callbackMap` represents a map (as a Javascript object) of callbacks that map to Owl Carousel events, such as `afterInit`, `afterUpdate` and so on. A callback can be a function, a name of a reusable function (we'll get to that soon), or an array of a mix of the two.
 
-`reusableFunctions` is a map (as a Javascript object) of names of reusable functions to said functions.
+`reusableFunctions` is a map (as a Javascript object) of names of reusable functions to said functions. Keep in mind that you can do nested maps as long as your maps are always Javascript objects, and you call them using dot-separated strings eg. `foo.bar.baz`.
 
 ### Example
 
@@ -100,6 +100,10 @@ $(".owl-carousel").owlCarousel(settings);
 ```
 
 ## Changelog
+
+### v0.1.1
+
+Added support for scoped reusables
 
 ### v0.1
 

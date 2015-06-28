@@ -59,11 +59,17 @@
 							padding: '1em'
 						});
 					},
-					'updateDebug'
+					'update',
+					'debug.initialised'
 				],
-				afterMove: 'updateDebug'
+				afterMove: 'update'
 			}, {
-				updateDebug: function(){
+				debug: {
+					initialised: function(){
+						alert('Initialised carousel!');
+					}
+				},
+				update: function(){
 					$('#debug').text("");
 					for (var i = 0; i < this.visibleItems.length; i++) {
 						var index = this.visibleItems[i],
