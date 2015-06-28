@@ -1,6 +1,6 @@
 /**
  * Owl Carousel v1 Pseudo-Plugins
- * v0.1.1
+ * v0.1.2
  */
 
 var OwlPlugins = {
@@ -132,7 +132,7 @@ var OwlPlugins = {
 		// Create a namespaced HTML ID that is random enough
 		// to be more or less unique
 		makeID: function(prefix) {
-			return prefix + "-" + MivUtils.generateUUID();
+			return prefix + "-" + OwlPlugins.utils.generateUUID();
 		},
 		// Add a value onto a space-separated attribute
 		pushAttr: function($, elem, attrName, newAttrValue) {

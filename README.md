@@ -101,6 +101,10 @@ $(".owl-carousel").owlCarousel(settings);
 
 ## Changelog
 
+### v0.1.2
+
+Fixed bug in variable naming
+
 ### v0.1.1
 
 Added support for scoped reusables
