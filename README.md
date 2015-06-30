@@ -24,7 +24,7 @@ MIT
 
 ## Installation
 
-In the `<head>` of your page, after you set up your Owl Carousel `<script>` items, add the following:
+In the `<head>` of your page, after you set up your jQuery and Owl Carousel `<script>` items, add the following:
 
 ```html
 <script type="text/javascript" src="owlcarousel-plugin.js"></script>
