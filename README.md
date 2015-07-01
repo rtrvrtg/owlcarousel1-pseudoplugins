@@ -10,8 +10,6 @@ Written by [Geoffrey Roberts](mailto:g.roberts@blackicemedia.com)
 
 MIT
 
-@TODO: Set up a LICENSE file
-
 ## Features
 
 * Allows Owl Carousel v1 to be extended in a modular fashion
